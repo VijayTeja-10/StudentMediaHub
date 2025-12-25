@@ -1,0 +1,72 @@
+body{ 
+    background-color: rgb(181, 22, 255); 
+}
+
+#clg{ 
+    max-width: 47vh; 
+    margin: 10vh; 
+}
+
+#sms{ 
+    display: flex; 
+    justify-content:left; 
+    flex-wrap: wrap; 
+}
+
+.reg{ 
+    margin: 3%; 
+    padding: 2%; 
+    width: 35vw; 
+    min-width: 35vw; 
+    height: 65vh; 
+    display: flex; 
+    justify-self: center; 
+    justify-content: center; 
+    border-radius: 3%;
+}
+
+#btn{ 
+    margin: 10px;
+}
+
+.hide{ 
+    display: none;
+}
+/* Tablet breakpoint */
+@media (max-width: 768px) {
+    .reg {
+        width: 95%;
+        margin: 10px auto;
+        padding: 12px;
+    }
+    #clg {
+        width: 95%;
+        margin: 10px auto;
+    }
+    #sms {
+        flex-direction: column;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Small phone breakpoint */
+@media (max-width: 480px) {
+    .reg {
+        width: 100%;
+        margin: 5px;
+        padding: 8px;
+    }
+    .reg h6 {
+        font-size: 0.9rem;
+    }
+    .reg button {
+        font-size: 0.9rem;
+        padding: 10px;
+        min-height: 48px;   /* touch-friendly */
+    }
+    h1 {
+        font-size: 1.2rem;
+    }
+}

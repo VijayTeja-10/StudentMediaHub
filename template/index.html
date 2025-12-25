@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'styles/style.css'%}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=delete" />
+    <title>QisMaterialsPortal</title>
+</head>
+<body>
+    <h1 align="center">Qis College Of Engineering & Technology</h1>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">MaterialsPortal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'sections'%}">Sections</a>
+                </li>
+
+                <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true">Unit Materials</a>
+                </li>
+
+                <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{% url 'register'%}">Register</a>
+                </li>
+
+                <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{% url 'features'%}">About</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search" method="post">
+                {% csrf_token %}
+                <input type="hidden" class="hide" value='sch' name="type">
+                <input class="form-control me-2" type="search" placeholder="section: CSDS-1" name="name" aria-label="Search"/>
+                <input class="form-control me-2" type="search" placeholder="batch: 2023" name="batch" aria-label="Search"/>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            </div>
+        </div>
+    </nav>
+    <div align="center">
+        <form action="{% url 'addsubject' %}" method="post" class="hide" id="subf">
+            {% csrf_token %}
+            <h6>Add Subject Form</h6>
+            <input type="text" placeholder="Enter Username[Admin]" name="uname"><br>
+            <input type="text" placeholder="Enter Subject name" name="name"><br>
+            <p class="text-warning">
+            Note: Section is automatically determined by username. <br>
+            Not by clicking on ViewSubjects dropdown of any section.
+            </p>
+            <button type="submit">Add</button>
+            <button type="reset" id="cls">Close</button><br>
+        </form>
+    </div>
+    <div class="d-flex" id="sms">
+        {% for section in sections%}
+        <div class="card" id="clg">
+        <h5 class="card-header">{{section}}</h5>
+        <div class="card-body">
+            <h5 class="card-title">Study Materials</h5>
+            <p class="card-text">Download or Upload Materials. With support to additional content[Mid Exams Q&A,Bits,LAB_pdfs] upload. Uploads are dealt by Admins/CR's of Sections.</p>
+            <div class="d-flex justify-content-between">
+                <div class="dropdown" id="subs">
+                <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    View Subjects
+                </a>
+
+                <ul class="dropdown-menu">
+
+                    {% for subject in section.subjects.all%}
+                    <li  class="d-flex justify-content-between"><a class="dropdown-item d-flex justify-content-between" id="smid" href="{% url 'materials'%}?subject=">{{subject.name}}<p class="hide" id="li">{{subject}}</p></a>
+                        <span id="delsub">
+                        <span class="material-symbols-outlined">delete</span>
+                        <div class="hide">
+                            <form class="d-flex" action="" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" class="hide" value='dsub' name="type">
+                            <input type="hidden" class="hide" id="pk" value={{section.id}} name="spk">
+                            <input type="hidden" class="hide" id="pk" value={{subject.id}} name="pk">
+                            <input type="text" placeholder="Enter Username[Admin]" name="name">
+                            <button class="btn btn-danger" type="submit" id="cl">Delete</button>
+                            </form>
+                        </div></span>                   
+                    </li>
+                    {% endfor %}
+                    <li><a class="dropdown-item" id="add">Add Subject</a></li>
+                </ul>
+                </div>
+
+                <div class="dropdown">
+                        <a class="btn btn-danger dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Delete
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form class="d-flex" action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" class="hide" value='dsec' name="type">
+                                <input type="hidden" class="hide" id="pk" value={{section.id}} name="pk">
+                                <input type="text" placeholder="Enter Username[Admin]" name="name">
+                                <button class="btn btn-danger" type="submit" id="cl">Delete</button>
+                                </form>
+                            </li>
+                        </ul>
+                </div>
+            </div>        
+        </div>
+        </div>
+        {% endfor %}
+    </div>
+    <script>        
+        const links=document.querySelectorAll("#smid");
+        links.forEach((liink)=>{            
+            liink.href+=liink.firstElementChild.innerHTML;
+        });
+        const adds=document.querySelectorAll('#add');
+        adds.forEach((add)=>{
+            add.addEventListener('mouseover',()=>{add.style.cursor='pointer';});
+            add.addEventListener('click',()=>{
+                window.scrollTo({top:0,behavior:"smooth"});
+                let sform=document.getElementById('subf');
+                sform.classList.remove('hide');
+                let cbtn=document.getElementById('cls');
+                cbtn.addEventListener('click',()=>{
+                    sform.method='';
+                    sform.action="";
+                    sform.classList.add('hide');
+                });
+
+            });
+        });
+        const dels=document.querySelectorAll('#delsub');
+        dels.forEach((del)=>{
+            let open=false;
+            del.addEventListener('mouseover',()=>{
+                del.style.cursor='pointer';
+            });
+            del.firstElementChild.addEventListener('click',(event)=>{
+                event.stopPropagation();                
+                if(!open){
+                    del.lastElementChild.classList.remove('hide');                
+                    del.firstElementChild.classList.remove('material-symbols-outlined');
+                    del.firstElementChild.innerHTML='<b>Tap/Click here to Close.</b>';
+                    open=true;
+                }else{
+                    del.lastElementChild.classList.method='';
+                    del.lastElementChild.classList.add('hide');
+                    del.firstElementChild.classList.add('material-symbols-outlined');                    
+                    del.firstElementChild.innerHTML='delete';
+                    del.lastElementChild.classList.method='';
+                    open=false;
+                }
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
