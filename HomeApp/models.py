@@ -1,5 +1,5 @@
 from django.db import models
-import google.genai as genai
+from google import genai
 
 
 # Create your models here.
@@ -17,9 +17,9 @@ class Ai:
         self.path=file
 
     def process(self):
-        client=genai.Client(api_key="")  # model access key
+        client=genai.Client(api_key="your api key here")  # model access key
         #model = genai.GenerativeModel("gemini-3-flash-preview")
-        model="gemini-3-flash-preview"
+        model="gemini-3.5-flash"
         role=self.tune()
         uploaded_file = client.files.upload(file=self.path)
 
